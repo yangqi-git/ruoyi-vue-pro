@@ -1,0 +1,31 @@
+-- 智慧物业 V1A 增量升级：服务恢复任务
+
+CREATE TABLE IF NOT EXISTS `property_service_recovery_task` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '恢复任务ID',
+  `recovery_no` varchar(40) NOT NULL COMMENT '恢复任务编号',
+  `project_id` bigint NOT NULL COMMENT '项目ID',
+  `event_id` bigint NOT NULL COMMENT '关联事件ID',
+  `trigger_type` tinyint NOT NULL COMMENT '触发类型 1超时 2差评 3重复投诉',
+  `trigger_detail` varchar(1000) NOT NULL COMMENT '触发详情',
+  `original_rating` tinyint DEFAULT NULL COMMENT '原始评价，不可覆盖',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态 0待分配 10已联系 20计划执行 30已完成',
+  `responsible_user_id` bigint DEFAULT NULL COMMENT '更高一级恢复负责人',
+  `contact_time` datetime DEFAULT NULL COMMENT '联系时间',
+  `contact_result` varchar(1000) DEFAULT NULL COMMENT '联系结果',
+  `recovery_plan` varchar(2000) DEFAULT NULL COMMENT '恢复计划',
+  `plan_due_time` datetime DEFAULT NULL COMMENT '计划完成时间',
+  `completed_time` datetime DEFAULT NULL COMMENT '完成时间',
+  `recovered_satisfaction` tinyint DEFAULT NULL COMMENT '恢复后满意度 1-5',
+  `version` int NOT NULL DEFAULT 0 COMMENT '并发版本',
+  `tenant_id` bigint NOT NULL DEFAULT 0 COMMENT '租户编号',
+  `creator` varchar(64) DEFAULT '' COMMENT '创建者',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updater` varchar(64) DEFAULT '' COMMENT '更新者',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_tenant_recovery_no` (`tenant_id`, `recovery_no`),
+  UNIQUE KEY `uk_event_trigger` (`tenant_id`, `event_id`, `trigger_type`),
+  KEY `idx_project_status` (`project_id`, `status`),
+  KEY `idx_responsible_user` (`responsible_user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='物业服务恢复任务表';

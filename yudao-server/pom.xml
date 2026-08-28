@@ -149,6 +149,13 @@
             <artifactId>yudao-spring-boot-starter-protection</artifactId>
         </dependency>
 
+        <!-- 物业财务模块 -->
+        <dependency>
+            <groupId>cn.iocoder.boot</groupId>
+            <artifactId>yudao-module-property</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
